@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    
+    <script>
+        $(document).ready(function(){
+            $('.add-new-blog').on('click',function(){
+                var blogTitle=$("#new-blog").val();
+
+                $.ajax(
+                    { url:"{% url 'myblog:addblog' %}",
+                    type:'GET',
+                    data:{
+                       blog_title:blogTitle, 
+                    },
+                }).done(function(response){
+                    if(response.status=='created'){
+                    $("#new-blog:").val('')
+                    location.reload()
+                }
+                })
+            })
+        });
+
+        /* Read and Update Operation */
+        $('.like-button').on('click', function() {
+                var blogID = $(this).attr("data-blogid");
+                var likeTag = $(this).parent().siblings('#like-count');
+ 
+                $.ajax({
+                    url: "{% url 'myblog:addlikes' %}",
+                    type: 'GET',
+                    data: {
+                        blog_id: blogID,
+                    },
+                }).done(function(response) {
+                    likeTag.text(response.total_likes)
+                    likeTag = null;
+                });
+            });
+    </script>
+    
+</body>
+</html>
